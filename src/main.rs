@@ -1,6 +1,7 @@
 use rusqlite::{Connection, Result};
 use lazy_static::lazy_static;
 use regex::Regex;
+use urlencoding::{encode, decode};
 // use std::env;
 // use std::path::Path;
 
@@ -55,7 +56,7 @@ fn create_database(conn: &mut Connection) -> Result<()> {
 
 fn verify_url(text: &str) -> bool {
     lazy_static! {
-        static ref RE: Regex = Regex::new(r"^[[:alnum:]]{3,9}:[/]{2}[[:alnum:]]+[.].+").unwrap();
+        static ref RE: Regex = Regex::new(r"^[[:alnum:]]{3,9}:[/]{2}.+[.].+").unwrap();
     }
     RE.is_match(text)
 }
@@ -89,14 +90,12 @@ fn main() -> Result<()> {
         let full = &args[2].as_str(); // Full URL
         if verify_url(full) {
             let items: Vec<&str> = full.split("/").collect();  // extract base from url, e.g. "youtube.com"
-            // println!("{}", items[2]);
-            // for item in full.split("/") {
-            //     println!("{}", item);
-            // }
+            let encoded_url = encode(&args[2]);
+            let encoded_name = encode(&args[3]);
 
             let new_entry = Entry {
-                entry_url: String::from(&args[2]),
-                entry_name: String::from(&args[3]),
+                entry_url: String::from(encoded_url),
+                entry_name: String::from(encoded_name),
                 entry_shorturl: items[2].to_string(),
                 menu_name: String::from(&args[4]),
             };
@@ -109,18 +108,13 @@ fn main() -> Result<()> {
         }
     } else if args[1] == "-x" {
         println!("Export function has not been implemented yet!");
+        // let decoded = decode("%F0%9F%91%BE%20Exterminate%21")?;
+        // println!("{}", decoded);
     } else {
         show_help();
     }
 
-    // let s = "foo".to_string();   // to String
-    // let s = String::from("foo"); // to String
-    // let ss = s.as_str();         // from String to str
-
-
-
     
-
 
 
     // let full = "https://youtu.be/M-gBnHJA";
@@ -144,6 +138,12 @@ fn main() -> Result<()> {
     // } else {
     //     println!("not a good url!");
     // }
+
+
+    // let s = "foo".to_string();   // to String
+    // let s = String::from("foo"); // to String
+    // let ss = s.as_str();         // from String to str
+
 
     println!("Program has reached it's end.");
 

@@ -9,6 +9,7 @@ edition = "2021"
 rusqlite = { version = "0.28.0", features = ["bundled"] }
 regex = "1.7.0"
 lazy_static = "1.4.0"
+urlencoding = "2.1.2"
 # clap = "4.0.26"
 # url = "2.3.1"
 # error-chain = "0.12.4"
