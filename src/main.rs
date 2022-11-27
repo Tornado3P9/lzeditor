@@ -108,8 +108,8 @@ fn main() -> Result<()> {
         }
     } else if args[1] == "-x" {
         println!("Export function has not been implemented yet!");
-        // let decoded = decode("%F0%9F%91%BE%20Exterminate%21")?;
-        // println!("{}", decoded);
+        let decoded = decode("%F0%9F%91%BE%20Exterminate%21").expect("UTF-8");
+        println!("{}", decoded);
     } else {
         show_help();
     }
