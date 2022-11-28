@@ -5,6 +5,18 @@ use urlencoding::{encode, decode};
 // use std::env;
 // use std::path::Path;
 
+// This function only gets compiled if the target OS is linux
+#[cfg(target_os = "linux")]
+fn are_you_on_linux() {
+    println!("You are running linux!");
+}
+
+// And this function only gets compiled if the target OS is *not* linux
+#[cfg(not(target_os = "linux"))]
+fn are_you_on_linux() {
+    println!("You are *not* running linux!");
+}
+
 #[derive(Debug)]
 struct Entry {
     entry_url: String,
@@ -43,7 +55,7 @@ fn create_database(conn: &mut Connection) -> Result<()> {
     )?;
     conn.execute(
         "CREATE TABLE IF NOT EXISTS entries(
-            entry_url      TEXT PRIMARY KEY NOT NULL,
+            entry_url      TEXT NOT NULL,
             entry_name     TEXT NOT NULL, 
             entry_shorturl TEXT NOT NULL,
             menu_name      TEXT NOT NULL
@@ -65,6 +77,15 @@ fn verify_url(text: &str) -> bool {
 
 
 fn main() -> Result<()> {
+    // are_you_on_linux();
+    
+    // println!("Are you sure?");
+    // if cfg!(target_os = "linux") {
+    //     println!("Yes. It's definitely linux!");
+    // } else {
+    //     println!("Yes. It's definitely *not* linux!");
+    // }
+
     // Create Database if not exists
     let mut conn = Connection::open("lzdatabase.db")?;
     create_database(&mut conn)?;
@@ -92,6 +113,7 @@ fn main() -> Result<()> {
             let items: Vec<&str> = full.split("/").collect();  // extract base from url, e.g. "youtube.com"
             let encoded_url = encode(&args[2]);
             let encoded_name = encode(&args[3]);
+            println!("{}, {}", &encoded_url, &encoded_name);
 
             let new_entry = Entry {
                 entry_url: String::from(encoded_url),
