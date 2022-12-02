@@ -94,6 +94,13 @@ fn main() -> Result<()> {
     //     println!("Database seems to exist, Yea!");
     // }
 
+    // This fancy stuff either gets the first argument as a String, or prints
+    // usage and exits if an argument was not supplied to the program.
+    // let mut arg: String = std::env::args().nth(1).unwrap_or_else(|| {
+    //     println!("Please supply an argument to this program.");
+    //     std::process::exit(-1);
+    // });
+
     let args: Vec<_> = std::env::args().collect();
     if args.len() < 3 {
         show_help();
